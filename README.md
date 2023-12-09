@@ -3,3 +3,5 @@
 https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-svoya-sistema-autentifikacii-polzovatelej/
 
 https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-upravlenie-rolyami-polzovatelej/
+
+https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-rabota-s-utverzhdeniyami-claims/
