@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using System.Security.Claims;
+
 namespace AspMvcAuth.Areas.Account.Controllers
 {
     [Area("Account")]
@@ -36,6 +38,7 @@ namespace AspMvcAuth.Areas.Account.Controllers
            var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, false, lockoutOnFailure: false);
            if (result.Succeeded)
             {
+                
                 return LocalRedirect("/");
             }
            else
@@ -68,6 +71,10 @@ namespace AspMvcAuth.Areas.Account.Controllers
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
+                user = await _userManager.FindByEmailAsync(user.Email);
+                //добавляем дату рождения в Claimd польщователя
+                await _userManager.AddClaimAsync(user, new Claim("Birthday",model.Birthday.ToString("dd.MM.yyyy"),ClaimValueTypes.String));
+                
                 return RedirectToAction("Index", "Home");
             }
             else

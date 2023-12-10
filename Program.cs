@@ -3,7 +3,8 @@ using AspMvcAuth.Models;
 using AspMvcAuth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI;
-
+using AspMvcAuth.CustomPolicy;
+using Microsoft.AspNetCore.Authorization;
 namespace AspMvcAuth
 {
     public class Program
@@ -31,6 +32,18 @@ namespace AspMvcAuth
             { 
                 opts.LoginPath = "/account/signin";
                 opts.AccessDeniedPath = "/AccessDanied"; //путь к странице с информацией о запрете доступа
+            });
+
+			//настраиваем политику авторизации
+			builder.Services.AddTransient<IAuthorizationHandler, OlderThenHandler>();
+			builder.Services.AddAuthorization(options => 
+            {
+                options.AddPolicy("OnlyRussianAdmin", policy => 
+                {
+                    policy.RequireRole("ADMIN");
+                    policy.RequireClaim("Language", "Russian");
+                    policy.AddRequirements(new OlderThenPolicy(18)); //пользователь старше 18 лет
+                });
             });
 
 			// Add services to the container.

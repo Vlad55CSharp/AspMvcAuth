@@ -36,7 +36,7 @@ namespace AspMvcAuth.Areas.Account.Models
         {
             ApplicationUser user = new()
             {
-                Id = 1,
+                //Id = 1,
                 Email = Email,
                 UserName = Login,
                 Organization = Organization,

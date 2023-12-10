@@ -21,7 +21,7 @@ namespace AspMvcAuth.Controllers
             return View();
         }
 
-        [Authorize(Roles ="MANAGER")]
+        [Authorize(Policy = "OnlyRussianAdmin")]
         public IActionResult Privacy()
         {
             return View();

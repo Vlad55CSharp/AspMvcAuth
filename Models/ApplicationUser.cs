@@ -9,5 +9,7 @@ namespace AspMvcAuth.Models
         public DateOnly Birthday { get; set; }
         public string Organization {  get; set; }
         public string Departmenet {  get; set; }
+
+        
     }
 }
