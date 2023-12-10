@@ -6,7 +6,8 @@
 	@if (Model.Identity.IsAuthenticated)
 	{
 		<p>Привет, @Model.Identity.Name</p>
-		<a href="/account/SignOut">Выйти из приложения</a>
+		<a href="/account/SignOut">Выйти из приложения</a><br/>
+		<a href="/account/updateuser/@Model.Identity.Name">Настройки аккаунта</a>
 	}
 	else
 	{

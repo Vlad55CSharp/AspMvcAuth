@@ -18,37 +18,49 @@ namespace AspMvcAuth.Models
 			Options = options;
 		}
 
+		private bool Send(string userEmail, string message, string subject = "")
+		{
+            MailMessage mailMessage = new()
+            {
+                From = new MailAddress(Options.From)
+            };
+            mailMessage.To.Add(new MailAddress(userEmail));
+
+            if (string.IsNullOrEmpty(subject))
+               mailMessage.Subject = Options.Subject;
+            else
+                mailMessage.Subject = subject;
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Body = message;
+
+            SmtpClient client = new()
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new System.Net.NetworkCredential(Options.Login, Options.Password),
+                Host = Options.Host,
+                Port = Options.Port,
+                EnableSsl = Options.EnableSSL
+            };
+
+            try
+            {
+                client.Send(mailMessage);
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
+        }
+
 		public bool SendEmail(string userEmail, string confirmationLink)
 		{
-			MailMessage mailMessage = new()
-            {
-				From = new MailAddress(Options.From)
-			};
-			mailMessage.To.Add(new MailAddress(userEmail));
-
-			mailMessage.Subject = Options.Subject;
-			mailMessage.IsBodyHtml = true;
-			mailMessage.Body = confirmationLink;
-
-			SmtpClient client = new()
-            {
-				DeliveryMethod = SmtpDeliveryMethod.Network,
-			    Credentials = new System.Net.NetworkCredential(Options.Login, Options.Password),
-				Host = Options.Host,
-				Port = Options.Port,
-				EnableSsl = Options.EnableSSL
-			};
-
-			try
-			{
-				client.Send(mailMessage);
-				return true;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-			}
-			return false;
+            return Send(userEmail, confirmationLink);
 		}
-	}
+
+        public bool SendEmailTwoFactorCode(string userEmail, string code)
+        {
+            return Send(userEmail, code, "Код подтверждения");
+        }
+    }
 }

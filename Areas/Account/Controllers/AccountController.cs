@@ -47,17 +47,53 @@ namespace AspMvcAuth.Areas.Account.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, false, lockoutOnFailure: false);
             if (result.Succeeded)
 			{
-                
 				   return LocalRedirect("/");
 			}
-			else
-			{
-				ModelState.AddModelError("", "Неверный логин или пароль");
-			}
+            
+			if (result.RequiresTwoFactor)
+            {
+                return RedirectToAction("LoginTwoStep", new { user.Email });
+            }
+            ModelState.AddModelError("", "Неверный логин или пароль");
 			return View("Login");
 		}
 
-		[Route("{area}/{action}")]
+        [AllowAnonymous]
+		[HttpGet]
+        [Route("{area}/{action}")]
+        public async Task<IActionResult> LoginTwoStep(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            bool emailResponse = _emailHelper.SendEmailTwoFactorCode(user.Email, token);
+            return View(new TwoFactor());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("{area}/{action}")]
+        public async Task<IActionResult> LoginTwoStep(TwoFactor twoFactor)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(twoFactor.TwoFactorCode);
+            }
+
+            var result = await _signInManager.TwoFactorSignInAsync("Email", twoFactor.TwoFactorCode, false, false);
+            if (result.Succeeded)
+            {
+                return Redirect(twoFactor.ReturnUrl ?? "/");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Неверный код подтверждения");
+                return View(twoFactor);
+            }
+        }
+
+
+
+        [Route("{area}/{action}")]
 		[HttpGet]
 		public IActionResult SignIn()
 		{
@@ -118,6 +154,28 @@ namespace AspMvcAuth.Areas.Account.Controllers
 
 			var result = await _userManager.ConfirmEmailAsync(user, token);
 			return View(result.Succeeded ? "ConfirmEmail" : "Error");
+		}
+
+        [Route("{area}/{action}/{name}")]
+		[HttpGet]
+        public async Task<IActionResult> UpdateUser(string name)
+		{
+			var user = await _userManager.FindByNameAsync(name);
+			if (user == null)
+				return BadRequest();
+			return View(user);
+		}
+
+		[Route("{area}/{action}/{name}")]
+		[HttpPost]
+		public async Task<IActionResult> UpdateUser(ApplicationUser user)
+		{
+			var updatedUser = await _userManager.FindByIdAsync(user.Id.ToString());
+			if (updatedUser == null)
+				return BadRequest();
+			updatedUser.TwoFactorEnabled = user.TwoFactorEnabled;
+			await _userManager.UpdateAsync(updatedUser);
+			return LocalRedirect("/");
 		}
 	}
 }
