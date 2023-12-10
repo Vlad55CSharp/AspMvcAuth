@@ -1,13 +1,12 @@
-using Microsoft.AspNetCore.Identity;
 using AspMvcAuth.Models;
 using AspMvcAuth.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.UI;
 using AspMvcAuth.CustomPolicy;
 using Microsoft.AspNetCore.Authorization;
+
 namespace AspMvcAuth
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
@@ -18,15 +17,20 @@ namespace AspMvcAuth
             builder.Services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlite(connectionString));
 
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+            var emailOptions = builder.Configuration.GetSection("EmailSender").Get<EmailHelperOptions>() ?? throw new InvalidOperationException("Email Sender options not found."); ;
+            builder.Services.AddEmailHelper(emailOptions);
+
+
+            var requireEmailConfirmed = builder.Configuration.GetValue<bool>("RequireConfirmedEmail");
+			builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
             {
+                options.SignIn.RequireConfirmedEmail = requireEmailConfirmed; //включаем подтверждение адреса электронной почты
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 10;
             })
                 .AddRoles<ApplicationRole>() //включаем поддержку ролей
                 .AddEntityFrameworkStores<ApplicationContext>();
-                
 
 			builder.Services.ConfigureApplicationCookie(opts => 
             { 
