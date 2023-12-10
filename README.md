@@ -5,3 +5,5 @@ https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-sv
 https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-upravlenie-rolyami-polzovatelej/
 
 https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-rabota-s-utverzhdeniyami-claims/
+
+https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-politiki-avtorizacii/
