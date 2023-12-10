@@ -10,6 +10,8 @@ https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-po
 
 https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-podtverzhdenie-adresa-elektronnoj-pochty/
 
+https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-dvuxfaktornaya-autentifikaciya/
+
 Для того, чтобы запустить приложение, необходимо в файл appsettings.json или в secrets.json добавить следующие настройки:
 
 <code>{
