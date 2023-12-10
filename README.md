@@ -12,7 +12,7 @@ https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-po
 
 Для того, чтобы запустить приложение, необходимо в файл appsettings.json или в secrets.json добавить следующие настройки:
 
-{
+<code>{
   "EmailSender": {
     "Subject": "Email Confirmation",
     "From": "адрес_с_которого_отправляется_письмо",
@@ -25,4 +25,4 @@ https://csharp.webdelphi.ru/autentifikaciya-i-avtorizaciya-v-asp-net-core-mvc-po
   "ConnectionStrings": {
     "DefaultConnection": "DataSource={файл_БД_SQLIte}"
   }
-}
+}</code>
